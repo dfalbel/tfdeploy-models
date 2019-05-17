@@ -12,7 +12,7 @@ for (model in models) {
     stdout = "|", stderr = "|"
   )
   
-  Sys.sleep(5)
+  Sys.sleep(20)
   
   instances <- list(instances = list(images = rep(0, 784)))
   
@@ -23,10 +23,19 @@ for (model in models) {
     encode = "json"
   )
   
+  
+  
   pred <- unlist(httr::content(cont))
   print(pred)
   stopifnot(is.numeric(pred))
+  
+  swg <- httr::GET("http://127.0.0.1:8089/swagger.json")
+  if (swg$status_code == 404)
+    stop("Swagger not working.")
+  
   p$kill()
   while(p$is_alive()) Sys.sleep(1)
 }
+
+
 
